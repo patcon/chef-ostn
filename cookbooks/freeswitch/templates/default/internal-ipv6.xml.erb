@@ -65,7 +65,7 @@
     <!-- media proxy mode -->
     <param name="inbound-bypass-media" value="<%= node[:freeswitch][:inbound_bypass_media] %>"/>
     <param name="inbound-proxy-media" value="<%= node[:freeswitch][:inbound_proxy_media] %>"/>
-
+    <param name="inbound-zrtp-passthru" value="<%= node[:freeswitch][:inbound_zrtp_passthru] %>"/>
     <!--Uncomment to let calls hit the dialplan *before* you decide if the codec is ok-->
     <!--<param name="inbound-late-negotiation" value="true"/>-->
     

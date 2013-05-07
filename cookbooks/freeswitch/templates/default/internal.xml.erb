@@ -52,6 +52,7 @@
     <param name="tls-version" value="$${sip_tls_version}"/>
     <param name="inbound-proxy-media" value="<%= node[:freeswitch][:inbound_proxy_media] %>"/>
     <param name="inbound-bypass-media" value="<%= node[:freeswitch][:inbound_bypass_media] %>"/>
+    <param name="inbound-zrtp-passthru" value="<%= node[:freeswitch][:inbound_zrtp_passthru] %>"/>
     <param name="nonce-ttl" value="60"/>
     <param name="auth-calls" value="$${internal_auth_calls}"/>
     <param name="inbound-reg-force-matching-username" value="true"/>
