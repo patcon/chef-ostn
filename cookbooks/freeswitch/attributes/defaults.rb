@@ -1,5 +1,5 @@
 default[:freeswitch][:git_uri] = "git://git.freeswitch.org/freeswitch.git"
-default[:freeswitch][:release_tag] = "2ab1605a8887adc62be1b75f6ef67af87ff080de"
+default[:freeswitch][:release_tag] = "v1.2.stable"
 default[:freeswitch][:inbound_proxy_media] = "true"
 default[:freeswitch][:inbound_zrtp_passthru] = "true"
 default[:freeswitch][:inbound_bypass_media] = "false"
