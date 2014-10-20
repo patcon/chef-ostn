@@ -42,9 +42,42 @@ remote_file "/home/#{DEPLOY_USER}/.ssh/authorized_keys" do
   mode "0600"
 end
 
+# create postgres database
+
+include_recipe 'postgresql::contrib' # required for dblink extension
+
+db_name = 'ostn_staging'
+
+db_sql_script = <<HEREDOC
+DO
+$do$
+BEGIN
+
+IF EXISTS (SELECT 1 FROM pg_database WHERE datname = '#{db_name}') THEN
+   RAISE NOTICE 'Database already exists';
+ELSE
+   PERFORM dblink_exec('dbname=' || current_database() -- current db
+                      , $$CREATE DATABASE #{db_name}$$);
+END IF;
+
+END
+$do$
+HEREDOC
+
+file "/tmp/create-postgres-db.sql" do
+  owner "postgres"
+  group "postgres"
+  content db_sql_script
+end
+
+bash "create-postgres-db" do
+  user "postgres"
+  code "psql < /tmp/create-postgres-db.sql"
+end
+
 # Create postgres user
 
-sql_script = <<HEREDOC
+user_sql_script = <<HEREDOC
 DO
 $body$
 BEGIN
@@ -54,7 +87,7 @@ BEGIN
       WHERE  usename = '#{DEPLOY_USER}') THEN
 
       CREATE ROLE #{DEPLOY_USER} LOGIN PASSWORD '#{node['postgresql']['password']['postgres']}';
-      ALTER USER #{DEPLOY_USER} CREATEDB;
+      GRANT ALL PRIVILEGES ON DATABASE #{db_name} TO #{DEPLOY_USER};
    END IF;
 END
 $body$
@@ -63,7 +96,7 @@ HEREDOC
 file "/tmp/create-postgres-user.sql" do
   owner "postgres"
   group "postgres"
-  content sql_script
+  content user_sql_script
 end
 
 bash "create-postgres-user" do

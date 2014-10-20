@@ -7,6 +7,7 @@ version          "0.0.1"
 
 depends "build-essential"
 depends "git"
+depends "postgresql"
 depends "nginx"
 depends "rbenv"
 depends "sudo"

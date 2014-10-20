@@ -38,6 +38,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       chef.cookbooks_path = ["cookbooks", "ext-cookbooks"]
       chef.add_recipe "apt"
       chef.add_recipe "postgresql::server"
+      chef.add_recipe "postgresql::contrib"
       #chef.add_recipe "freeswitch"
       #chef.add_recipe "freeswitch::ivr"
       #chef.add_recipe "freeswitch::security"
@@ -59,6 +60,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
           git_uri: "https://github.com/patcon/OSTel.git"
         },
         postgresql: {
+          contrib: {
+            extensions: ["dblink"]
+          },
           password: {
             postgres: "testing123"
           }
