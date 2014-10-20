@@ -20,9 +20,22 @@ deploying the Rails webapp:
 
 ## Usage
 
+**See Caveats section first.**
+
 From the project folder, run these commands:
 
 ```
 berks vendor ext-cookbooks
 vagrant up
 ```
+
+### Caveats
+
+- My github username is hardcoded to give me access, so [edit
+  this.](https://github.com/patcon/chef-ostn/blob/easier-deploy/cookbooks/webapp/recipes/default.rb#L36)
+
+- You'll likely need to add this to your local `/etc/hosts` file:
+
+        # replace IP with server IP from `vagrant ssh-config` command
+        123.1.2.3 ostn-test
+
