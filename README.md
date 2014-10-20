@@ -38,7 +38,7 @@ link above and follow the deploy instructions for that webapp.
 ### Caveats
 
 - My github username is hardcoded to give me access, so [edit
-  this.](https://github.com/patcon/chef-ostn/blob/easier-deploy/Vagrantfile#L60)
+  this.](https://github.com/patcon/chef-ostn/blob/easier-deploy/Vagrantfile#L59)
 
 - You might need to add this to your local `/etc/hosts` file:
 

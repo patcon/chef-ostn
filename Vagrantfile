@@ -56,7 +56,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
           }
         },
         ostn: {
-          git_uri: "https://github.com/patcon/OSTel.git",
           github_user_access: "patcon",
         },
         postgresql: {
