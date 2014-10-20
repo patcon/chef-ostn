@@ -1,4 +1,4 @@
-# OSTN
+# OSTN Server
 
 This project aims to make deployment of an OSTN server and accompanying
 Ruby on Rail webapp possible in several commands.
