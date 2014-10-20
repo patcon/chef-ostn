@@ -13,10 +13,12 @@ deploying the Rails webapp:
 
 ## Requirements
 
-- Vagrant
-- Chefdk (temporary)
+- [Vagrant](http://www.vagrantup.com/downloads.html)
+- [ChefDK](https://downloads.getchef.com/chef-dk/) (temporary requirement)
+- [DigitalOcean API
+  key](https://cloud.digitalocean.com/settings/applications): `export
+  DIGITALOCEAN_TOKEN=<my_api_key>`
 - vagant-digitalocean plugin: `vagrant plugin install vagrant-digitalocean`
-- DigitalOcean API key: `export DIGITALOCEAN_TOKEN=<my_api_key>`
 
 ## Usage
 
@@ -29,6 +31,9 @@ berks vendor ext-cookbooks # temporary step
 vagrant up
 ```
 
+Now that the server is up and running, clone the OSTel repo from the
+link above and follow the deploy instructions for that webapp.
+
 ### Caveats
 
 - My github username is hardcoded to give me access, so [edit
@@ -36,6 +41,9 @@ vagrant up
 
 - You'll likely need to add this to your local `/etc/hosts` file:
 
-        # replace IP with server IP from `vagrant ssh-config` command
-        123.1.2.3 ostn-test
+        # find IP from `vagrant ssh-config` after `vagrant up`
+        <server_ip> ostn-test
+
+- Finally, NOT YET GUARANTEED TO WORK. I'll mark a release when this
+  setup works consistently :)
 
