@@ -95,10 +95,11 @@ sudo 'unicorn-actions' do
   commands ['/usr/bin/service unicorn_ostn *']
 end
 
-# Test linking
+# Add unicorn_ostn init file
 
-link "/etc/init.d/unicorn_ostn" do
-  to "/home/#{DEPLOY_USER}/ostn/current/unicorn-init"
+template "/etc/init.d/unicorn_ostn" do
+  source "unicorn_init.sh.erb"
+  mode "0755"
 end
 
 # Create ruby environment
