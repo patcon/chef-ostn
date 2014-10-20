@@ -59,9 +59,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
           git_uri: "https://github.com/patcon/OSTel.git"
         },
         postgresql: {
-          contrib: {
-            extensions: ["dblink"]
-          },
           password: {
             postgres: "testing123"
           }

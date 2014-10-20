@@ -46,6 +46,11 @@ end
 
 include_recipe 'postgresql::contrib' # required for dblink extension
 
+bash "install-dblink-extension" do
+  user "postgres"
+  code "echo CREATE EXTENSION IF NOT EXISTS dblink | psql"
+end
+
 db_name = 'ostn_staging'
 
 db_sql_script = <<HEREDOC
