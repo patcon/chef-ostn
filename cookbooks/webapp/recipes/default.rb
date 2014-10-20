@@ -8,20 +8,115 @@
 # https://www.gnu.org/licenses/gpl2.txt
 #
 
-package "readline6-dev"
-gem_package "bundler"
+# Git required for Capistrano deploy
 
-# the freeswitch cookbook must be run before this resource
-# get source
-execute "git_clone" do
-  command "git clone #{node[:ostn][:git_uri]}"
-  cwd "/usr/local/src"
-  creates "/usr/local/src/OSTel"
+include_recipe "git"
+
+# Install custom nginx
+
+include_recipe "nginx"
+
+# Set up Capistrano's deploy user
+
+DEPLOY_USER = "deploy"
+
+user DEPLOY_USER do
+  supports manage_home: true
+  comment "Capistrano deployment user"
+  home "/home/#{DEPLOY_USER}"
+  shell "/bin/bash"
 end
 
-# copy source directory without git repo to /usr/local/freeswitch
-
-execute "bundle_install" do
-	command "bundle install"
-	cwd "/usr/local/freeswitch/webapp"
+directory "/home/#{DEPLOY_USER}/.ssh" do
+  owner DEPLOY_USER
+  group DEPLOY_USER
+  mode "0700"
 end
+
+github_user = "patcon"
+
+remote_file "/home/#{DEPLOY_USER}/.ssh/authorized_keys" do
+  source "https://github.com/#{github_user}.keys"
+  owner DEPLOY_USER
+  group DEPLOY_USER
+  mode "0600"
+end
+
+# Create postgres user
+
+sql_script = <<HEREDOC
+DO
+$body$
+BEGIN
+   IF NOT EXISTS (
+      SELECT *
+      FROM   pg_catalog.pg_user
+      WHERE  usename = '#{DEPLOY_USER}') THEN
+
+      CREATE ROLE #{DEPLOY_USER} LOGIN PASSWORD '#{node['postgresql']['password']['postgres']}';
+      ALTER USER #{DEPLOY_USER} CREATEDB;
+   END IF;
+END
+$body$
+HEREDOC
+
+file "/tmp/create-postgres-user.sql" do
+  owner "postgres"
+  group "postgres"
+  content sql_script
+end
+
+bash "create-postgres-user" do
+  user "postgres"
+  code "psql < /tmp/create-postgres-user.sql"
+end
+
+# deploy user needs `service` on its PATH
+
+link "/usr/bin/service" do
+  to "/usr/sbin/service"
+end
+
+# Allow deploy user limited sudo access
+
+include_recipe "sudo"
+
+sudo 'nginx-reload' do
+  user DEPLOY_USER
+  runas 'root'
+  nopasswd true
+  commands ['/usr/bin/service nginx reload']
+end
+
+sudo 'unicorn-actions' do
+  user DEPLOY_USER
+  runas 'root'
+  nopasswd true
+  commands ['/usr/bin/service unicorn_ostn *']
+end
+
+# Test linking
+
+link "/etc/init.d/unicorn_ostn" do
+  to "/home/#{DEPLOY_USER}/ostn/current/unicorn-init"
+end
+
+# Create ruby environment
+
+include_recipe "rbenv::default"
+include_recipe "rbenv::ruby_build"
+
+RB_VERS = "1.9.3-p547"
+
+rbenv_ruby RB_VERS do
+  global true
+end
+
+rbenv_gem "bundler" do
+  ruby_version RB_VERS
+end
+
+# Install rails app pre-requisites
+
+include_recipe "build-essential"
+package "libsqlite3-dev"
