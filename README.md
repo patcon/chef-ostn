@@ -18,7 +18,8 @@ deploying the Rails webapp:
 - [DigitalOcean API
   key](https://cloud.digitalocean.com/settings/applications): `export
   DIGITALOCEAN_TOKEN=<my_api_key>`
-- vagant-digitalocean plugin: `vagrant plugin install vagrant-digitalocean`
+- [vagant-digitalocean](https://github.com/smdahlen/vagrant-digitalocean) plugin: `vagrant plugin install vagrant-digitalocean`
+- [vagrant-omnibus](https://github.com/opscode/vagrant-omnibus) plugin: `vagrant plugin install vagrant-omnibus`
 
 ## Usage
 
