@@ -14,7 +14,7 @@ deploying the Rails webapp:
 ## Requirements
 
 - Vagrant
-- Chefdk
+- Chefdk (temporary)
 - vagant-digitalocean plugin: `vagrant plugin install vagrant-digitalocean`
 - DigitalOcean API key: `export DIGITALOCEAN_TOKEN=<my_api_key>`
 
@@ -25,7 +25,7 @@ deploying the Rails webapp:
 From the project folder, run these commands:
 
 ```
-berks vendor ext-cookbooks
+berks vendor ext-cookbooks # temporary step
 vagrant up
 ```
 
