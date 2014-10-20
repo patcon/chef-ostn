@@ -40,6 +40,9 @@ link above and follow the deploy instructions for that webapp.
 - My github username is hardcoded to give me access, so [edit
   this.](https://github.com/patcon/chef-ostn/blob/easier-deploy/Vagrantfile#L59)
 
+- Make sure you edit the [path to your private
+  key.](https://github.com/patcon/chef-ostn/blob/easier-deploy/Vagrantfile#L23)
+
 - You might need to add this to your local `/etc/hosts` file:
 
         # find IP from `vagrant ssh-config` after `vagrant up`
