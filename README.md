@@ -38,9 +38,9 @@ link above and follow the deploy instructions for that webapp.
 ### Caveats
 
 - My github username is hardcoded to give me access, so [edit
-  this.](https://github.com/patcon/chef-ostn/blob/easier-deploy/cookbooks/webapp/recipes/default.rb#L36)
+  this.](https://github.com/patcon/chef-ostn/blob/easier-deploy/Vagrantfile#L60)
 
-- You'll likely need to add this to your local `/etc/hosts` file:
+- You might need to add this to your local `/etc/hosts` file:
 
         # find IP from `vagrant ssh-config` after `vagrant up`
         <server_ip> ostn-test

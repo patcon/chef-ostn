@@ -33,7 +33,7 @@ directory "/home/#{DEPLOY_USER}/.ssh" do
   mode "0700"
 end
 
-github_user = "patcon"
+github_user = node['ostn']['github_user_access']
 
 remote_file "/home/#{DEPLOY_USER}/.ssh/authorized_keys" do
   source "https://github.com/#{github_user}.keys"
