@@ -32,7 +32,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   if Vagrant.has_plugin?("vagrant-omnibus")
     config.omnibus.chef_version = "11.16.4"
-    #config.berkshelf.enabled = false
+    config.berkshelf.enabled = false
 
     config.vm.provision "chef_solo" do |chef|
       chef.cookbooks_path = ["cookbooks", "ext-cookbooks"]
