@@ -115,8 +115,3 @@ end
 rbenv_gem "bundler" do
   ruby_version RB_VERS
 end
-
-# Install rails app pre-requisites
-
-include_recipe "build-essential"
-package "libsqlite3-dev"
