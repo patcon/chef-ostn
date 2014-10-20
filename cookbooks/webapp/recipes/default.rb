@@ -12,9 +12,20 @@
 
 include_recipe "git"
 
-# Install custom nginx
+# Install nginx site
 
 include_recipe "nginx"
+
+template "#{default['nginx']['dir']}/sites-available/ostn-staging-site" do
+  source "nginx-site.erb"
+  mode "0755"
+  action :create
+  notifies :restart, "service[nginx]"
+end
+
+nginx_site "ostn-staging-site" do
+  enable true
+end
 
 # Set up Capistrano's deploy user
 
