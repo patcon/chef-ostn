@@ -36,6 +36,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     config.vm.provision "chef_solo" do |chef|
       chef.cookbooks_path = ["cookbooks", "ext-cookbooks"]
+      chef.add_recipe "apt"
       chef.add_recipe "postgresql::server"
       #chef.add_recipe "freeswitch"
       #chef.add_recipe "freeswitch::ivr"
