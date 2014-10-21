@@ -27,6 +27,16 @@ nginx_site "ostn-staging-site" do
   enable true
 end
 
+# Add nginx config to mitigate POODLE vulnerability
+
+cookbook_file "#{node['nginx']['dir']}/conf.d/poodle_vuln_mitigation.conf" do
+  source "poodle_vuln_mitigation.conf"
+  owner  'root'
+  group  node['root_group']
+  mode   '0644'
+  notifies :reload, 'service[nginx]'
+end
+
 # Set up Capistrano's deploy user
 
 DEPLOY_USER = "deploy"

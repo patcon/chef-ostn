@@ -7,3 +7,5 @@
 - Munin setup? (nginx)
 - Generate self-signed cert rather than snakeoil cert.
 - ASK about stronger ciphers in nginx ssl config
+- ASK about `:nginx_strict_ssl` attr
+- ASK about POODLE mitigation snippet
