@@ -27,6 +27,7 @@ server {
   }
 
   access_log  /var/log/nginx/<%= node[:fqdn] %>.access.log no_ip_no_referer;
+  error_log   /var/log/nginx/<%= node[:fqdn] %>.error.log;
 
   ssl  on;
   ssl_certificate  <%= node['nginx']['dir'] %>/ssl/cert.pem;
