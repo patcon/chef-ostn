@@ -16,7 +16,7 @@ include_recipe "git"
 
 include_recipe "nginx"
 
-template "#{default['nginx']['dir']}/sites-available/ostn-staging-site" do
+template "#{node['nginx']['dir']}/sites-available/ostn-staging-site" do
   source "nginx-site.erb"
   mode "0755"
   action :create
