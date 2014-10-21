@@ -35,8 +35,12 @@ server {
 
   ssl_session_timeout  5m;
 
-  ssl_protocols  SSLv2 SSLv3 TLSv1;
+  ssl_protocols  TLSv1;
+  <% if node[:ostn][:nginx_strict_ssl] -%>
+  ssl_ciphers HIGH:!aNULL:!MD5;
+  <% else -%>
   ssl_ciphers  ALL:!ADH:!EXPORT56:RC4+RSA:+HIGH:+MEDIUM:+LOW:+SSLv3:+EXP;
+  <% end -%>
   ssl_prefer_server_ciphers   on;
 
   location /munin/stats {
