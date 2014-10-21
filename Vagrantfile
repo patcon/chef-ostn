@@ -57,6 +57,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
             include_sudoers_d: true
           }
         },
+        nginx: {
+          disable_access_log: true,
+          default_site_enabled: false,
+        },
         ostn: {
           github_user_access: "patcon",
         },
