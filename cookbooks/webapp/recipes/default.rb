@@ -112,7 +112,7 @@ BEGIN
       FROM   pg_catalog.pg_user
       WHERE  usename = '#{DEPLOY_USER}') THEN
 
-      CREATE ROLE #{DEPLOY_USER} LOGIN PASSWORD '#{node['postgresql']['password']['postgres']}';
+      CREATE ROLE #{DEPLOY_USER} LOGIN ENCRYPTED PASSWORD '#{node['postgresql']['password']['postgres']}';
       GRANT ALL PRIVILEGES ON DATABASE #{db_name} TO #{DEPLOY_USER};
    END IF;
 END
