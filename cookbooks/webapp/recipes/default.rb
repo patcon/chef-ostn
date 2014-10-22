@@ -72,7 +72,7 @@ bash "install-dblink-extension" do
   code "echo CREATE EXTENSION IF NOT EXISTS dblink | psql"
 end
 
-db_name = 'ostn_staging'
+db_name = node[:ostn][:db_name]
 
 db_sql_script = <<HEREDOC
 DO
