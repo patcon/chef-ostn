@@ -118,7 +118,7 @@ import_file "kamailio-local.cfg"
 # - database URL - used to connect to database server by modules such
 #       as: auth_db, acc, usrloc, a.s.o.
 #!ifndef DBURL
-#!define DBURL "postgres://kamailio:000000000000000000@127.0.0.1/kamailiodb"
+#!define DBURL "postgres://kamailio:<%= node['postgresql']['password']['postgres'] %>@127.0.0.1/<%= node[:ostn][:db_name] %>"
 #!endif
 #!endif
 #!ifdef WITH_MULTIDOMAIN
@@ -144,22 +144,23 @@ import_file "kamailio-local.cfg"
 ### LOG Levels: 3=DBG, 2=INFO, 1=NOTICE, 0=WARN, -1=ERR
 #!ifdef WITH_DEBUG
 debug=4
-log_stderror=no
-memdbg=5
-memlog=5
+log_stderror=yes
 #!else
-# no logging, bro
-corelog=-1
-debug=-1
+debug=2
 log_stderror=no
-memdbg=-1
-memlog=-1
 #!endif
+
+fork=yes
+#corelog=-1
+#debug=-1
+#log_stderror=no
+#memdbg=-1
+#memlog=-1
 
 log_facility=LOG_LOCAL0
 
-fork=yes
-children=8
+children=4
+tcp_max_connections=4096
 
 /* uncomment the next line to disable TCP (default on) */
 #disable_tcp=yes
@@ -217,13 +218,13 @@ voicemail.srv_port = "5060" desc "VoiceMail Port"
 
 ####### Modules Section ########
 
+
 # set paths to location of modules (to sources or installation folders)
 #!ifdef WITH_SRCPATH
-mpath="modules_k:modules"
+mpath="modules/"
 #!else
-mpath="/usr/local/lib/kamailio/modules_k/:/usr/local/lib64/kamailio/modules/"
+mpath="/usr/lib/x86_64-linux-gnu/kamailio/modules/"
 #!endif
-
 #!ifdef WITH_MYSQL
 loadmodule "db_mysql.so"
 #!endif
@@ -424,8 +425,8 @@ modparam("presence_xml", "force_active", 1)
 modparam("rtpproxy", "rtpproxy_sock", "unix:/var/run/rtpproxy/rtpproxy.sock")
 
 # ----- nathelper params -----
-modparam("nathelper", "natping_interval", 0)
-modparam("nathelper", "ping_nated_only", 0)
+modparam("nathelper", "natping_interval", 30)
+modparam("nathelper", "ping_nated_only", 1)
 modparam("nathelper", "sipping_bflag", FLB_NATSIPPING)
 modparam("nathelper", "sipping_from", "sip:pinger@kamailio.org")
 
@@ -502,10 +503,10 @@ request_route {
 		record_route();
 
 	# account only INVITEs
-	if (is_method("INVITE"))
-	{
-		setflag(FLT_ACC); # do accounting
-	}
+	#if (is_method("INVITE"))
+	#{
+	#	setflag(FLT_ACC); # do accounting
+	#}
 
 	# dispatch requests to foreign domains
 	route(SIPOUT);
@@ -528,7 +529,6 @@ request_route {
 	# dispatch destinations to PSTN
 	route(PSTN);
 
-	# TODO: test the new built-in voicemail route. I think it's the same thing.
 	route(IVR);
 
 	# user location service
@@ -598,11 +598,11 @@ route[WITHINDLG] {
 		# take the path determined by record-routing
 		if (loose_route()) {
 			route(DLGURI);
-			if (is_method("BYE")) {
-				setflag(FLT_ACC); # do accounting ...
-				setflag(FLT_ACCFAILED); # ... even if the transaction fails
-			}
-			else if ( is_method("ACK") ) {
+			#if (is_method("BYE")) {
+			#	setflag(FLT_ACC); # do accounting ...
+			#	setflag(FLT_ACCFAILED); # ... even if the transaction fails
+			#}
+			if ( is_method("ACK") ) {
 				# ACK is forwarded statelessy
 				route(NATMANAGE);
 			}
@@ -685,10 +685,10 @@ route[LOCATION] {
 	}
 
 	# when routing via usrloc, log the missed calls also
-	if (is_method("INVITE"))
-	{
-		setflag(FLT_ACCMISSED);
-	}
+	#if (is_method("INVITE"))
+	#{
+	#	setflag(FLT_ACCMISSED);
+	#}
 
 	route(RELAY);
 	exit;
@@ -711,9 +711,7 @@ route[PRESENCE] {
 		handle_publish();
 		t_release();
 	}
-	else
-	if( is_method("SUBSCRIBE"))
-	{
+	else if( is_method("SUBSCRIBE")) {
 		handle_subscribe();
 		t_release();
 	}
@@ -772,7 +770,8 @@ route[NATDETECT] {
 		if (is_method("REGISTER")) {
 			fix_nated_register();
 		} else {
-			add_contact_alias();
+			if(is_first_hop())
+				set_contact_alias();
 		}
 		setflag(FLT_NATS);
 	}
@@ -793,16 +792,19 @@ route[NATMANAGE] {
 	if (!(isflagset(FLT_NATS) || isbflagset(FLB_NATB)))
 		return;
 
-	rtpproxy_manage();
+	rtpproxy_manage("co");
 
 	if (is_request()) {
 		if (!has_totag()) {
-			add_rr_param(";nat=yes");
+			if(t_is_branch_route()) {
+				add_rr_param(";nat=yes");
+			}
 		}
 	}
 	if (is_reply()) {
 		if(isbflagset(FLB_NATB)) {
-			add_contact_alias();
+			if(is_first_hop())
+				set_contact_alias();
 		}
 	}
 #!endif
@@ -900,7 +902,7 @@ route[IVR] {
 # route to voicemail server
 route[TOVOICEMAIL] {
 #!ifdef WITH_VOICEMAIL
-	if(!is_method("INVITE"))
+	if(!is_method("INVITE|SUBSCRIBE"))
 		return;
 
 	# check if VoiceMail server IP is defined
@@ -908,11 +910,18 @@ route[TOVOICEMAIL] {
 		xlog("SCRIPT: VoiceMail rotuing enabled but IP not defined\n");
 		return;
 	}
-	if($avp(oexten)==$null)
-		return;
+	if(is_method("INVITE")) {
+                if($avp(oexten)==$null)
+                        return;
 
-	$ru = "sip:" + $avp(oexten) + "@" + $sel(cfg_get.voicemail.srv_ip)
+                $ru = "sip:" + $avp(oexten) + "@" + $sel(cfg_get.voicemail.srv_ip)
+                               + ":" + $sel(cfg_get.voicemail.srv_port);
+	} else {
+		if($rU==$null)
+			return;
+		$ru = "sip:" + $rU + "@" + $sel(cfg_get.voicemail.srv_ip)
 				+ ":" + $sel(cfg_get.voicemail.srv_port);
+        }
 	route(RELAY);
 	exit;
 #!endif
