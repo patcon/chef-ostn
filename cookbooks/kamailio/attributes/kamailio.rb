@@ -1,5 +1,4 @@
-default[:apt][:kamailio_repo] = "kamailio40"
-default[:apt][:distro] = "squeeze"
+default[:kamailio][:repo_url] = "http://deb.kamailio.org/kamailio41"
 default[:kamailio][:sip_domain] = node[:fqdn].to_s
 default[:kamailio][:db_engine] = "POSTGRES"
 default[:kamailio][:postgresql_schema_dir] = "/usr/share/kamailio/postgres"

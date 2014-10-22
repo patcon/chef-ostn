@@ -9,24 +9,11 @@
 
 # Add Kamailio package source to the system's database
 
-execute "apt-key-add" do
-  command "apt-key add /tmp/kamkey.gpg"
-  action :nothing
-end
-
-cookbook_file "/tmp/kamkey.gpg" do
-  source "kamailiodebkey.gpg"
-  notifies :run, "execute[apt-key-add]", :immediately
-end
-
-execute "apt-get-update" do
-  command "apt-get update"
-  action :nothing
-end
-
-template "/etc/apt/sources.list.d/kamailio.list" do
-  source "kamailio.list.erb"
-  notifies :run, "execute[apt-get-update]", :immediately
+apt_repository 'kamailio' do
+  uri node['kamailio']['repo_url']
+  distribution node['lsb']['codename']
+  components ['main']
+  key "http://deb.kamailio.org/kamailiodebkey.gpg"
 end
 
 # install kamailio and friends
