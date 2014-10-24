@@ -154,6 +154,13 @@ sudo 'unicorn-actions' do
   commands ['/usr/bin/service unicorn_ostn *']
 end
 
+sudo 'kamailio-restart' do
+  user DEPLOY_USER
+  runas 'root'
+  nopasswd true
+  commands ['/usr/bin/service kamailio restart']
+end
+
 # Add unicorn_ostn init file
 
 template "/etc/init.d/unicorn_ostn" do
