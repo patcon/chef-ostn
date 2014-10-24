@@ -49,7 +49,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       #chef.add_recipe "rbenv::ruby_build"
       chef.add_recipe "webapp"
       chef.add_recipe "kamailio::default"
-      #chef.add_recipe "kamailio::postgresql_mod"
+      chef.add_recipe "kamailio::postgresql_mod"
 
       # You may also specify custom JSON attributes:
       chef.json = {
