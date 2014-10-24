@@ -26,10 +26,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     end
   end
 
-  #config.vm.provision "shell",
-  #  privileged: false,
-  #  inline: "apt-get install sudo"
-
   if Vagrant.has_plugin?("vagrant-omnibus")
     config.omnibus.chef_version = "11.16.4"
 
