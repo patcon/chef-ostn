@@ -13,6 +13,11 @@ VAGRANTFILE_API_VERSION = "2"
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.define "ostn-test"
 
+  if Vagrant.has_plugin?("HostManager")
+    config.hostmanager.enabled = true
+    config.hostmanager.manage_host = true
+  end
+
   if Vagrant.has_plugin?("vagrant-digitalocean")
     config.vm.provider "digital_ocean" do |provider, override|
       provider.token = ENV['DIGITALOCEAN_TOKEN']

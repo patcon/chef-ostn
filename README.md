@@ -20,6 +20,7 @@ deploying the Rails webapp:
   DIGITALOCEAN_TOKEN=<my_api_key>`
 - [vagant-digitalocean](https://github.com/smdahlen/vagrant-digitalocean) plugin: `vagrant plugin install vagrant-digitalocean`
 - [vagrant-omnibus](https://github.com/opscode/vagrant-omnibus) plugin: `vagrant plugin install vagrant-omnibus`
+- [vagrant-hostmanager](https://github.com/smdahlen/vagrant-hostmanager) plugin: `vagrant plugin install vagrant-hostmanager`
 
 ## Usage
 
@@ -43,10 +44,9 @@ link above and follow the deploy instructions for that webapp.
 - Make sure you edit the [path to your private
   key.](https://github.com/patcon/chef-ostn/blob/easier-deploy/Vagrantfile#L23)
 
-- You might need to add this to your local `/etc/hosts` file:
-
-        # find IP from `vagrant ssh-config` after `vagrant up`
-        <server_ip> ostn-test
+- The `vagrant-hostmanager` plugin will make sure your `/etc/hosts` file
+  gets updated, which will make it easier to deploy the OSTel rails app
+  with its current deployment configuration.
 
 - Finally, NOT YET GUARANTEED TO WORK. I'll mark a release when this
   setup works consistently :)
