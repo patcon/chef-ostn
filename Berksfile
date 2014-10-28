@@ -1,7 +1,11 @@
 source "https://supermarket.getchef.com"
 
+cookbook "apt"
+cookbook "build-essential"
 cookbook "git"
 cookbook "nginx"
+cookbook "openssl"
+cookbook "postgresql"
 cookbook "rbenv"
 cookbook "ruby_build"
 cookbook "sudo"
