@@ -11,10 +11,10 @@
 ### END INIT INFO
 
 # Change these to match your app:
-USER=deploy
-APP_NAME=ostn
-APP_PATH=/home/deploy/$APP_NAME
-ENV=staging
+USER=<%= node['ostn']['deploy_user'] %>
+APP_NAME=<%= node['ostn']['webapp_name'] %>
+APP_PATH=<%= node['ostn']['webapp_dir'] %>
+ENV=<%= node['ostn']['webapp_env'] %>
 
 # env
 APP_ROOT="$APP_PATH/current"

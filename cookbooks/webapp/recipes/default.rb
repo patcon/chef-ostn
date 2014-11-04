@@ -16,20 +16,20 @@ include_recipe "git"
 
 include_recipe "nginx"
 
-template "#{node['nginx']['dir']}/sites-available/ostn-staging-site" do
+template "#{node['nginx']['dir']}/sites-available/#{node['ostn']['db_name']}" do
   source "nginx-site.erb"
   mode "0755"
   action :create
   notifies :restart, "service[nginx]"
 end
 
-nginx_site "ostn-staging-site" do
+nginx_site node['ostn']['db_name'] do
   enable true
 end
 
 # Set up Capistrano's deploy user
 
-DEPLOY_USER = "deploy"
+DEPLOY_USER = node['ostn']['deploy_user']
 
 user DEPLOY_USER do
   supports manage_home: true
@@ -151,13 +151,6 @@ sudo 'nginx-reload' do
   commands ['/usr/bin/service nginx reload']
 end
 
-sudo 'unicorn-actions' do
-  user DEPLOY_USER
-  runas 'root'
-  nopasswd true
-  commands ['/usr/bin/service unicorn_ostn *']
-end
-
 sudo 'kamailio-restart' do
   user DEPLOY_USER
   runas 'root'
@@ -165,9 +158,18 @@ sudo 'kamailio-restart' do
   commands ['/usr/bin/service kamailio restart']
 end
 
-# Add unicorn_ostn init file
+unicorn_service = "unicorn_#{node[:ostn][:webapp_name]}"
 
-template "/etc/init.d/unicorn_ostn" do
+sudo 'unicorn-actions' do
+  user DEPLOY_USER
+  runas 'root'
+  nopasswd true
+  commands ["/usr/bin/service #{unicorn_service} *"]
+end
+
+# Add unicorn app init file
+
+template "/etc/init.d/#{unicorn_service}" do
   source "unicorn_init.sh.erb"
   mode "0755"
 end

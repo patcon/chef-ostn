@@ -42,7 +42,7 @@ end
 # See: http://stackoverflow.com/a/762649/504018
 
 bash "read-only-db-access-for-kamailio-user" do
-  user "deploy"
+  user node['ostn']['deploy_user']
   code "echo ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON TABLES TO #{pg_user} | psql -d #{node[:ostn][:db_name]}"
 end
 
