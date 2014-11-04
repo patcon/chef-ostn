@@ -1,5 +1,5 @@
 default[:ostn][:webapp_name] = "ostn"
-default[:ostn][:webapp_env] = "staging"
+default[:ostn][:webapp_env] = "demo"
 default[:ostn][:webapp_dir] = "/var/www/#{node[:ostn][:webapp_name]}"
 default[:ostn][:db_name] = "#{node[:ostn][:webapp_name]}_#{node[:ostn][:webapp_env]}"
 default[:ostn][:deploy_user] = "webapp"

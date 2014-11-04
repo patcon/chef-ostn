@@ -11,7 +11,7 @@ ENV['VAGRANT_DEFAULT_PROVIDER'] = 'digital_ocean'
 VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-  config.vm.define "ostn-test"
+  config.vm.define "ostn-demo"
 
   if Vagrant.has_plugin?("HostManager")
     config.hostmanager.enabled = true
