@@ -173,6 +173,9 @@ end
 include_recipe "rbenv::default"
 include_recipe "rbenv::ruby_build"
 
+# Speed up compilation during development
+include_recipe "webapp::precompiled_ruby"
+
 RB_VERS = "1.9.3-p547"
 
 rbenv_ruby RB_VERS do
