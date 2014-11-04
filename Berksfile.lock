@@ -3,6 +3,9 @@ DEPENDENCIES
   build-essential
   git
   nginx
+    git: git://github.com/patcon/nginx.git
+    revision: 200bc4cb5fa3b10ba21c8c97d03224117efaec2e
+    branch: 281-poodle-vuln
   openssl
   postgresql
   rbenv
