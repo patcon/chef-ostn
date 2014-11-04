@@ -53,6 +53,20 @@ remote_file "/home/#{DEPLOY_USER}/.ssh/authorized_keys" do
   mode "0600"
 end
 
+# Create webapp directory
+
+directory node['ostn']['webapp_dir'] do
+  owner DEPLOY_USER
+  group DEPLOY_USER
+  recursive true
+end
+
+# Auto-enter webapp directory on ssh login
+
+file "/etc/profile.d/login_dir.sh" do
+  content "cd #{node['ostn']['webapp_dir']}"
+end
+
 # create postgres database
 
 include_recipe 'postgresql::contrib' # required for dblink extension
