@@ -158,6 +158,16 @@ template "/etc/init.d/unicorn_ostn" do
   mode "0755"
 end
 
+# Set envvars
+
+file "/etc/environment" do
+  content <<EOH
+OSTN_DB_USER=#{DEPLOY_USER}
+OSTN_DB_PASS=#{node['postgresql']['password']['postgres']}
+OSTN_DB_NAME=#{node['ostn']['db_name']}
+EOH
+end
+
 # Create ruby environment
 
 include_recipe "rbenv::default"
