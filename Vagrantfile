@@ -23,9 +23,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       provider.token = ENV['DIGITALOCEAN_TOKEN']
       provider.image = 'Debian 7.0 x64'
       provider.size = '512mb'
-      provider.ssh_key_name = "#{Socket.gethostname}-digitalocean"
+      provider.ssh_key_name = Socket.gethostname
 
-      override.ssh.private_key_path = '~/.ssh/id_rsa_do'
+      override.ssh.private_key_path = '~/.ssh/id_rsa'
       override.vm.box = 'digital_ocean'
       override.vm.box_url = 'https://github.com/smdahlen/vagrant-digitalocean/raw/master/box/digital_ocean.box'
     end
