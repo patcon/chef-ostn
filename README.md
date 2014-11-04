@@ -1,3 +1,9 @@
+**Note:** This will not properly deploy a DigitalOcean server until this
+fix](https://github.com/smdahlen/vagrant-digitalocean/pull/165) for the
+`vagrant-digitalocean` plugin has been merged and released.
+
+--------------------------------
+
 # OSTN Server
 
 This project aims to make deployment of an OSTN server and accompanying
